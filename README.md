@@ -21,8 +21,11 @@ A Python project that fetches news articles using the NewsAPI and analyzes their
 env
 
 NEWS_API_KEY=your_api_key_here
+
 Run the script:
 
 python news_analyzer.py
+
 License
+
 This project is licensed under the MIT License. See the LICENSE file for details

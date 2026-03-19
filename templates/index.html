@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News Analyzer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f1117;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        header {
+            background: #1a1d27;
+            border-bottom: 1px solid #2d3148;
+            padding: 1.5rem 2rem;
+        }
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        header p {
+            font-size: 0.85rem;
+            color: #8892a4;
+            margin-top: 0.25rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        .filter-form form {
+            background: #1a1d27;
+            border: 1px solid #2d3148;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        label {
+            font-size: 0.75rem;
+            color: #8892a4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        select, input[type="number"] {
+            background: #0f1117;
+            border: 1px solid #2d3148;
+            color: #e2e8f0;
+            padding: 0.45rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        select:focus, input:focus {
+            border-color: #4f6ef7;
+        }
+        button[type="submit"] {
+            background: #4f6ef7;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.4rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        button[type="submit"]:hover {
+            background: #3d5ce6;
+        }
+              .error {
+            background: #2d1a1a;
+            border: 1px solid #7f2020;
+            color: #f87171;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #8892a4;
+        }
+        .stats-bar span {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        .card {
+            background: #1a1d27;
+            border: 1px solid #2d3148;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.15s;
+        }
+        .card:hover {
+            border-color: #4f6ef7;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.6rem;
+        }
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.4;
+        }
+        .card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .card-title a:hover {
+            color: #7b97ff;
+        }
+        .card-source {
+            font-size: 0.75rem;
+            color: #8892a4;
+            white-space: nowrap;
+            padding-top: 2px;
+        }
+        .card-desc {
+            font-size: 0.82rem;
+            color: #8892a4;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .method-box {
+            background: #0f1117;
+            border: 1px solid #2d3148;
+            border-radius: 7px;
+            padding: 0.6rem 0.9rem;
+        }
+        .method-label {
+            font-size: 0.68rem;
+            color: #8892a4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+        }
+        .method-result {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .badge-positive {
+            background: #14532d;
+            color: #86efac;
+        }
+        .badge-negative {
+            background: #450a0a;
+            color: #fca5a5;
+        }
+        .badge-neutral {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+        .score-text {
+            font-size: 0.78rem;
+            color: #8892a4;
+        }
+        .agreement {
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .agree {
+            color: #86efac;
+        }
+        .disagree {
+            color: #fca5a5;
+        }
+        .empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #8892a4;
+        }
+        .empty h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #e2e8f0;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.78rem;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI News Analyzer</h1>
+        <p>Dual sentiment analysis: TextBlob (lexicon) vs. DistilBERT (transformer)</p>
+    </header>
+
+    <div class="container">
+        <div class="filter-form">
+            <form action="/analyze" method="GET">
+                <div class="field">
+                    <label>Country</label>
+                    <select name="country">
+                        <option value="us" {{ 'selected' if country == 'us' else '' }}>United States</option>
+                        <option value="gb" {{ 'selected' if country == 'gb' else '' }}>United Kingdom</option>
+                        <option value="in" {{ 'selected' if country == 'in' else '' }}>India</option>
+                        <option value="au" {{ 'selected' if country == 'au' else '' }}>Australia</option>
+                        <option value="ca" {{ 'selected' if country == 'ca' else '' }}>Canada</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="" {{ 'selected' if not category else '' }}>All</option>
+                        <option value="technology" {{ 'selected' if category == 'technology' else '' }}>Technology</option>
+                        <option value="business" {{ 'selected' if category == 'business' else '' }}>Business</option>
+                        <option value="science" {{ 'selected' if category == 'science' else '' }}>Science</option>
+                        <option value="health" {{ 'selected' if category == 'health' else '' }}>Health</option>
+                        <option value="sports" {{ 'selected' if category == 'sports' else '' }}>Sports</option>
+                        <option value="entertainment" {{ 'selected' if category == 'entertainment' else '' }}>Entertainment</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Articles</label>
+                    <input type="number" name="count" value="{{ count or 10 }}" min="1" max="20" style="width:70px">
+                </div>
+
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+        
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if results %}
+            {# Stats bar #}
+            {% set agree_count = results | selectattr('agreement', 'equalto', 'Agree') | list | length %}
+            {% set pos_tb = results | selectattr('textblob.label', 'equalto', 'Positive') | list | length %}
+            {% set neg_tb = results | selectattr('textblob.label', 'equalto', 'Negative') | list | length %}
+
+            <div class="stats-bar">
+                <div>{{ results | length }} <span>articles</span></div>
+                <div>TextBlob: {{ pos_tb }} <span>+</span> {{ neg_tb }} <span>-</span></div>
+                <div>Methods agree: <span>{{ agree_count }}/{{ results | length }}</span></div>
+            </div>
+
+            {% for r in results %}
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            {% if r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.title }}</a>{% else %}{{ r.title }}{% endif %}
+                        </div>
+                        <div class="card-source">{{ r.source }}</div>
+                    </div>
+
+                    {% if r.description %}
+                        <div class="card-desc">{{ r.description[:180] }}{% if r.description | length > 180 %}...{% endif %}</div>
+                    {% endif %}
+
+                    <div class="comparison">
+                        {# TextBlob #}
+                        <div class="method-box">
+                            <div class="method-label">TextBlob (lexicon)</div>
+                            <div class="method-result">
+                                <span class="badge badge-{{ r.textblob.label | lower }}">{{ r.textblob.label }}</span>
+                                <span class="score-text">polarity {{ r.textblob.polarity | round(3, 'floor') | string }} &middot; subj {{ r.textblob.subjectivity | round(2, 'floor') | string }}</span>
+                            </div>
+                        </div>
+
+                        {# Transformer #}
+                        <div class="method-box">
+                            <div class="method-label">DistilBERT (transformer)</div>
+                            <div class="method-result">
+                                <span class="badge badge-{{ 'positive' if r.transformer.label == 'POSITIVE' else 'negative' }}">{{ r.transformer.label }}</span>
+                                <span class="score-text">confidence {{ r.transformer.score | round(3, 'floor') | string }}</span>
+                            </div>
+                        </div>
+
+                        {# Agreement #}
+                        <div class="agreement {{ 'agree' if 'Agree' in r.agreement else 'disagree' }}">{{ r.agreement }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+      
+        {% elif results is not none %}
+            <div class="empty">
+                <h2>No results</h2>
+                <p>Try different filters or check your API key.</p>
+            </div>
+        {% else %}
+            <div class="empty">
+                <h2>Select filters and click Analyze</h2>
+                <p>Compares TextBlob (lexicon-based) vs. DistilBERT (transformer) on live news headlines.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        AI-Powered News Analyzer | Aladurthi Sai Meghanath
+        | <a href="https://github.com/SaiMeghanath/news-analyzer-nlp" style="color:#4f6ef7">GitHub</a>
+    </footer>
+</body>
+</html>

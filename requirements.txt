@@ -1,0 +1,9 @@
+flask==3.0.3
+requests==2.31.0
+beautifulsoup4==4.12.2
+newspaper4k==0.9.3
+nltk==3.8.1
+transformers==4.38.0
+torch==2.1.0
+python-dotenv==1.0.0
+gunicorn==21.2.0

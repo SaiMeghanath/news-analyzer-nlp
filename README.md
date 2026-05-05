@@ -1,3 +1,5 @@
+[![HuggingFace Space](https://img.shields.io/badge/%F0%9F%A4%97%20Live%20Demo-HuggingFace-FFD21F)](https://huggingface.co/spaces/SaiMeghanath/news-analyzer-nlp)
+
 # AI-Powered News Analyzer
 
 Real-time news summarization and sentiment analysis using NLP pipelines comparing lexicon-based and transformer-based approaches on news-domain text.
@@ -23,9 +25,9 @@ News articles are high-velocity, domain-specific text written in formal register
 ## Architecture
 
 NewsAPI Article Fetch --> Preprocessing --> TextBlob lexicon-based Polarity Score [-1, 1]
-                                       --> HuggingFace Transformer Label + Confidence Score
-                                        distilbert-base-uncased-finetuned-sst-2-english
-                                       --> Flask Web UI Results Display
+                                 --> HuggingFace Transformer Label + Confidence Score
+                                      distilbert-base-uncased-finetuned-sst-2-english
+                                 --> Flask Web UI Results Display
 
 
 ## Tech Stack
